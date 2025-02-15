@@ -14,7 +14,7 @@ pipeline {
         }
         stage ("Git Checkout") {
             steps {
-                git 'https://github.com/sivas-git/Zomato-Project.git'
+                git url:'https://github.com/sivas-git/DevOps-Project-Zomato.git', branch:main 
             }
         }
         stage("Sonarqube Analysis"){
@@ -56,7 +56,7 @@ pipeline {
         stage ("Tag & Push to DockerHub") {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker') {
+                    withDockerRegistry(credentialsId: 'docker-hub') {
                         sh "docker tag zomato siva3r/zomato:latest "
                         sh "docker push siva3r/zomato:latest "
                     }
@@ -66,7 +66,7 @@ pipeline {
         stage('Docker Scout Image') {
             steps {
                 script{
-                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
+                   withDockerRegistry(credentialsId: 'docker-hub', toolName: 'docker'){
                        sh 'docker-scout quickview siva3r/zomato:latest'
                        sh 'docker-scout cves siva3r/zomato:latest'
                        sh 'docker-scout recommendations siva3r/zomato:latest'
